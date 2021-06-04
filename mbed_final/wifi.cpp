@@ -33,12 +33,14 @@ WIFI::~WIFI(){
 }
 
 void WIFI::connect(){
-    printf("\nConnecting to %s...\n", MBED_CONF_APP_WIFI_SSID);
-    int ret = wifi.connect(MBED_CONF_APP_WIFI_SSID, MBED_CONF_APP_WIFI_PASSWORD, NSAPI_SECURITY_WPA_WPA2);
-    if (ret != 0) {
-        printf("\nConnection error\n");
-        return;
-    }
+
+    do {
+        printf("\nConnecting to %s...\n", MBED_CONF_APP_WIFI_SSID);
+        int ret = wifi.connect(MBED_CONF_APP_WIFI_SSID, MBED_CONF_APP_WIFI_PASSWORD, NSAPI_SECURITY_WPA_WPA2);
+        if (ret != 0) {
+            printf("\nConnection error\n");
+        }
+    } while (ret != 0);
 
     printf("Success\n\n");
     printf("MAC: %s\n", wifi.get_mac_address());
@@ -53,16 +55,18 @@ void WIFI::connect(){
     _wifi->get_ip_address(&addr);
     printf("IP address: %s\n", addr.get_ip_address() ? addr.get_ip_address() : "None");
     printf("Sending request to %s...\n", IP_address);
-    _socket->open(_wifi);
-    _wifi->gethostbyname(IP_address, &addr);
-    addr.set_port(Port_number);
-    response = _socket->connect(addr);
 
-    if (0 != response){
-        printf("Error connecting: %d\n", response);
-        // socket.close();
-        // return; 
-    }
+    do {
+        _socket->open(_wifi);
+        _wifi->gethostbyname(IP_address, &addr);
+        addr.set_port(Port_number);
+        response = _socket->connect(addr);
+
+        if (0 != response){
+            printf("Error connecting: %d\n", response);
+            socket.close();
+        }
+    } while (0 != response);
 
 }
 
