@@ -34,9 +34,10 @@ WIFI::~WIFI(){
 
 void WIFI::connect(){
 
+    int ret;
     do {
         printf("\nConnecting to %s...\n", MBED_CONF_APP_WIFI_SSID);
-        int ret = wifi.connect(MBED_CONF_APP_WIFI_SSID, MBED_CONF_APP_WIFI_PASSWORD, NSAPI_SECURITY_WPA_WPA2);
+        ret = wifi.connect(MBED_CONF_APP_WIFI_SSID, MBED_CONF_APP_WIFI_PASSWORD, NSAPI_SECURITY_WPA_WPA2);
         if (ret != 0) {
             printf("\nConnection error\n");
         }
@@ -64,7 +65,7 @@ void WIFI::connect(){
 
         if (0 != response){
             printf("Error connecting: %d\n", response);
-            socket.close();
+            _socket->close();
         }
     } while (0 != response);
 
