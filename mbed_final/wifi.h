@@ -13,7 +13,7 @@ class WIFI{
     public:
         WIFI(NetworkInterface* wifi, events::EventQueue &event_queue);
         ~WIFI();
-        void connect();
+        void connect(TCPSocket* socket);
         void send_data(Sensor* sensor);
 };
 

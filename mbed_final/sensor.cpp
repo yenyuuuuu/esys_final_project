@@ -42,9 +42,9 @@ Sensor::Sensor(events::EventQueue &event_queue) : _event_queue(event_queue)
 
 void Sensor::getData()
 {
-    itemFront = BUTTON_RIGHT.read();
-    itemBack = BUTTON_LEFT.read();
-    acc = BUTTON_TOP.read();
+    itemFront = (BUTTON_RIGHT.read())?1:0;
+    itemBack = (BUTTON_LEFT.read())1:0;
+    acc = (BUTTON_TOP.read())1:0;
     BSP_ACCELERO_AccGetXYZ(_pAccDataXYZ);
     BSP_GYRO_GetXYZ(_pGyroDataXYZ);
 }

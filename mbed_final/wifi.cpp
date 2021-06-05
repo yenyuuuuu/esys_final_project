@@ -21,7 +21,7 @@ extern SpwfSAInterface wifi;
 #define Sample_rate 2
 
 
-WIFI::WIFI(NetworkInterface* wifi, events::EventQueue &event_queue, TCPSocket* socket)
+WIFI::WIFI(NetworkInterface* wifi, events::EventQueue &event_queue)
         : _wifi(wifi), _event_queue(event_queue), _socket(NULL)
 { 
     
@@ -78,12 +78,14 @@ void WIFI::connect(TCPSocket* socket){
 
 void WIFI:: send_data(Sensor* sensor)
 {
-    char sbuffer[500] = "";
+    char sbuffer[200] = "";
     nsapi_error_t response;
     nsapi_size_t size = strlen(sbuffer);
 
 
-    int len = sprintf(sbuffer,"{\"Acc_x\":%.2f,\"Acc_y\":%.2f,\"Acc_z\":%.2f,\"Gyro_x\":%.2f,\"Gyro_y\":%.2f,\"Gyro_z\":%.2f,\"Item_front\":%d,\"Item_back\":%d,\"Acc\":%d}",sensor->_pAccDataXYZ[0],sensor->_pAccDataXYZ[1],sensor->_pAccDataXYZ[2],sensor->_pGyroDataXYZ[0],sensor->_pGyroDataXYZ[1],sensor->_pGyroDataXYZ[2],sensor->itemFront, sensor->itemBack, sensor->acc);
+    float accx = sensor->pDataXYZ[0], accy = sensor->pDataXYZ[1], accz = sensor->pDataXYZ[2];
+    float gyrox = sensor->pGyroDataXYZ[0], gyroy = sensor->pGyroDataXYZ[1], gyroz = sensor->pGyroDataXYZ[2];
+    int len = sprintf(sbuffer,"{\"Acc_x\":%.2f,\"Acc_y\":%.2f,\"Acc_z\":%.2f,\"Gyro_x\":%.2f,\"Gyro_y\":%.2f,\"Gyro_z\":%.2f,\"Item_front\":%d,\"Item_back\":%d,\"Acc\":%d}",(float)((int)(accx*10000))/10000,(float)((int)(accy*10000))/10000,(float)((int)(accz*10000))/10000,(float)((int)(gyrox*10000))/10000,(float)((int)(gyroy*10000))/10000,(float)((int)(gyroz*10000))/10000,sensor->itemFront, sensor->itemBack, sensor->acc);
     printf("len: %d", len);
 
     response = _socket->send(sbuffer,len);
