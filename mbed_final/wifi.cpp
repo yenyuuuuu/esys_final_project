@@ -68,6 +68,7 @@ void WIFI::connect(TCPSocket* socket){
             printf("Error connecting: %d\n", response);
             _socket->close();
             delete _socket;
+            This_thread::sleep_for(5000);
         }
     } while (NSAPI_ERROR_OK != response);
     socket = _socket;
