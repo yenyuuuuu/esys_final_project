@@ -8,15 +8,12 @@ import mariokart as mk
 HOST = '192.168.1.102'  # Standard loopback interface address (localhost)
 PORT = 3000        # Port to listen on (non-privileged ports are > 1023)
 
-#_mod_
-keyDict = {"Left": "left", "Right": "right", "Item_front":"up", "Item_back":"down", "Drift":"c", "Acc": "x"}
-
 # data format example
-# "{"Acc_x":%.2f,"Acc_y":%.2f,"Acc_z":%.2f,"Gyro_x":%.2f,"Gyro_y":%.2f,"Gyro_z":%.2f,"Item_front":%d,"Item_back":%d,"Acc":%d}"
-# {'Acc_x':10000.25,"Acc_y":10000.25,"Acc_z":10000.25,"Gyro_x":10000.25,"Gyro_y":10000.25,"Gyro_z":10000.25,"Item_front":1,"Item_back":1,"Acc":1}
+# "{"Acc_x":%.2f,"Acc_y":%.2f,"Acc_z":%.2f,"Gyro_x":%.2f,"Gyro_y":%.2f,"Gyro_z":%.2f,"leftButton":%d,"ightButton":%d,"top":%d}"
+# {'Acc_x':10000.25,"Acc_y":10000.25,"Acc_z":10000.25,"Gyro_x":10000.25,"Gyro_y":10000.25,"Gyro_z":10000.25,"leftButton":1,"rightButton":1,"topButton":1}
 
 def main():
-    size = 200
+    size = 250 
     past_j_data = None
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
@@ -25,21 +22,16 @@ def main():
         conn, addr = s.accept()
         with conn:
             print('Connected by', addr)
-
             while True:
-                data = conn.recv(200).decode('utf-8')
+                data = conn.recv(250).decode('utf-8')
                 if not data:
                     print("no data!!!")
                     break
                 print("Receive data: "+data)
                 #check data size!! if size is reasonable then parse json
-                if len(data) > size:
+                if len(data) < size:
                     j_data=json.loads(data)
-                    for control in j_data:
-                        if j_data[control] == 1 and past_j_data[control] ==0:
-                            kb.press(keyDict[control])
-                        elif j_data[control] == 0 and past_j_data[control] == 1:
-                            kb.release(keyDict[control])
+                    mk.action(j_data, past_j_data)
                     past_j_data = j_data
                 else:
                     print("error in transmission length: {:d}".format(len(data)))

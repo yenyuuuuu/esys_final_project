@@ -14,9 +14,11 @@ class Sensor {
 
         int16_t _pAccDataXYZ[3] = {0};
         float _pGyroDataXYZ[3] = {0};
-        int8_t itemFront;
-        int8_t itemBack;
-        int8_t acc;
+        int16_t _AccOffset[3] = {0};
+        float _GyroOffset[3] = {0};
+        int8_t leftButton;
+        int8_t rightButton;
+        int8_t topButton;
 };
 
 #endif

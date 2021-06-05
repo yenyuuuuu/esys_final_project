@@ -12,39 +12,39 @@ Sensor::Sensor(events::EventQueue &event_queue) : _event_queue(event_queue)
     BSP_ACCELERO_Init();    
     BSP_GYRO_Init();
     init_params();
+    calibrate();
 }
 
-// void Sensor::calibrate(){
-//     printf("Calibrating Sensors\n");
-//     printf("Please don't move your board\n");
-//     int n = 0;
-//     _AccOffset[0] = _AccOffset[1] = _AccOffset[2] = 0;
-//     _GyroOffset[0] = _GyroOffset[1] = _GyroOffset[2] = 0;
-//     while(n < 50){
-//         BSP_ACCELERO_AccGetXYZ(_pAccDataXYZ);
-//         BSP_GYRO_GetXYZ(_pGyroDataXYZ);
-//         for(int i = 0; i < 3; ++i){
-//             _AccOffset[i] += _pAccDataXYZ[i];
-//             _GyroOffset[i] += _pGyroDataXYZ[i];
-//         }
+void Sensor::calibrate(){
+    printf("Calibrating Sensors\n");
+    printf("Please don't move your board\n");
+    int n = 0;
+    _AccOffset[0] = _AccOffset[1] = _AccOffset[2] = 0;
+    _GyroOffset[0] = _GyroOffset[1] = _GyroOffset[2] = 0;
+    while(n < 50){
+        BSP_ACCELERO_AccGetXYZ(_pAccDataXYZ);
+        BSP_GYRO_GetXYZ(_pGyroDataXYZ);
+        for(int i = 0; i < 3; ++i){
+            _AccOffset[i] += _pAccDataXYZ[i];
+            _GyroOffset[i] += _pGyroDataXYZ[i];
+        }
+        n++;
+    }
+    for(int i = 0; i < 3; ++i){
+        _AccOffset[i] /= n;
+        _GyroOffset[i] /= n;
+    }
 
-//         n++;
-//     }
-//     for(int i = 0; i < 3; ++i){
-//         _AccOffset[i] /= n;
-//         _GyroOffset[i] /= n;
-//     }
-
-//     printf("Calibration done\n");
-//     printf("Acc offset: %d , %d, %d\n ", _AccOffset[0], _AccOffset[1], _AccOffset[2]);
-//     printf("Gyro offset: %f, %f, %f\n ", _GyroOffset[0], _GyroOffset[1], _GyroOffset[2]);
-// }
+    printf("Calibration done\n");
+    printf("Acc offset: %d , %d, %d\n ", _AccOffset[0], _AccOffset[1], _AccOffset[2]);
+    printf("Gyro offset: %f, %f, %f\n ", _GyroOffset[0], _GyroOffset[1], _GyroOffset[2]);
+}
 
 void Sensor::getData()
 {
-    itemFront = (BUTTON_RIGHT.read())?1:0;
-    itemBack = (BUTTON_LEFT.read())1:0;
-    acc = (BUTTON_TOP.read())1:0;
+    leftButton = (BUTTON_LEFT.read())?1:0;
+    rightButton = (BUTTON_RIGHT.read())1:0;
+    topButton = (BUTTON_TOP.read())1:0;
     BSP_ACCELERO_AccGetXYZ(_pAccDataXYZ);
     BSP_GYRO_GetXYZ(_pGyroDataXYZ);
 }
@@ -71,7 +71,7 @@ void Sensor::getData()
 
 void Sensor:: init_params()
 {
-    itemFront = 0;
-    itemBack = 0;
-    acc = 0;
+    leftButton = 0;
+    rightButton = 0;
+    topButton = 0;
 }
