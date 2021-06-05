@@ -28,14 +28,14 @@ def main():
                     print("no data!!!")
                     break
                 print("Receive data: "+data)
+                conn.send('ok'.encode('utf-8'))
                 #check data size!! if size is reasonable then parse json
                 if len(data) < size:
                     j_data=json.loads(data)
                     mk.action(j_data, past_j_data)
                     past_j_data = j_data
                 else:
-                    print("error in transmission length: {:d}".format(len(data)))
-                    
+                    print("error in transmission length: {:d}".format(len(data)))  
             s.close()
             return
     return

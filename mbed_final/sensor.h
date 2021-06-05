@@ -11,6 +11,7 @@ class Sensor {
         Sensor(events::EventQueue &event_queue);
         void getData();
         void init_params();
+        void calibrate();
 
         int16_t _pAccDataXYZ[3] = {0};
         float _pGyroDataXYZ[3] = {0};

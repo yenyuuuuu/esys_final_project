@@ -9,10 +9,8 @@ def action(j_data, past_j_data):
     if past_j_data == None:
         return
 
-    print(j_data["leftButton"])
-    print(past_j_data["leftButton"])
-    print(j_data["topButton"])
-    print(past_j_data["topButton"])
+    print(j_data["Acc_x"])
+    print(type(j_data["Acc_x"]))
 
     # deal with button
     if j_data["leftButton"] == 1 and past_j_data["leftButton"] ==0:

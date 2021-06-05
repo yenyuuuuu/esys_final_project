@@ -68,7 +68,7 @@ void WIFI::connect(TCPSocket* socket){
             printf("Error connecting: %d\n", response);
             _socket->close();
             delete _socket;
-            This_thread::sleep_for(5000);
+            ThisThread::sleep_for(5000);
         }
     } while (NSAPI_ERROR_OK != response);
     socket = _socket;
@@ -76,15 +76,16 @@ void WIFI::connect(TCPSocket* socket){
 }
 
 
-void WIFI:: send_data(Sensor* sensor)
+void WIFI:: send_data(Sensor* sensor, bool* socket_connect)
 {
     char sbuffer[250] = "";
+    char rbuffer[4] = "ok";
     nsapi_error_t response;
     nsapi_size_t size = strlen(sbuffer);
 
 
-    float accx = sensor->pDataXYZ[0]-sensor->_AccOffset[0], accy = sensor->pDataXYZ[1]-sensor->_AccOffset[1], accz = sensor->pDataXYZ[2]-sensor->_AccOffset[2];
-    float gyrox = sensor->pGyroDataXYZ[0]-sensor->_GyroOffset[0], gyroy = sensor->pGyroDataXYZ[1]-sensor->_GyroOffset[1], gyroz = sensor->pGyroDataXYZ[2]-sensor->_GyroOffset[2];
+    float accx = sensor->_pAccDataXYZ[0]-sensor->_AccOffset[0], accy = sensor->_pAccDataXYZ[1]-sensor->_AccOffset[1], accz = sensor->_pAccDataXYZ[2]-sensor->_AccOffset[2];
+    float gyrox = sensor->_pGyroDataXYZ[0]-sensor->_GyroOffset[0], gyroy = sensor->_pGyroDataXYZ[1]-sensor->_GyroOffset[1], gyroz = sensor->_pGyroDataXYZ[2]-sensor->_GyroOffset[2];
     int len = sprintf(sbuffer,"{\"Acc_x\":%.2f,\"Acc_y\":%.2f,\"Acc_z\":%.2f,\"Gyro_x\":%.2f,\"Gyro_y\":%.2f,\"Gyro_z\":%.2f,\"leftButton\":%d,\"rightButton\":%d,\"topButton\":%d}",(float)((int)(accx*10000))/10000,(float)((int)(accy*10000))/10000,(float)((int)(accz*10000))/10000,(float)((int)(gyrox*10000))/10000,(float)((int)(gyroy*10000))/10000,(float)((int)(gyroz*10000))/10000,sensor->leftButton, sensor->rightButton, sensor->topButton);
     printf("len: %d", len);
 
@@ -92,6 +93,10 @@ void WIFI:: send_data(Sensor* sensor)
     if (len != response){
         printf("Error sending: %d\n", response);
     }
+    int rcount = _socket->recv(rbuffer, sizeof(rbuffer));
+    printf("rcount = %d, receive message = %s\n", rcount, rbuffer);
+    if (rbuffer != "ok") *socket_connect = false;
+
 }
 
 /*

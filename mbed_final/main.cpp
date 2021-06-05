@@ -27,6 +27,7 @@ int main()
     TCPSocket socket;
     Sensor sensor(event_queue);
     WIFI   _wifi(&wifi, event_queue);
+    bool socket_connect = true;
 
     _wifi.connect(&socket);
     
@@ -36,7 +37,10 @@ int main()
 
 
     event_queue.call_every(100ms,&sensor, &Sensor::getData);
-    event_queue.call_every(100ms,&_wifi, &WIFI::send_data,&sensor);
+    event_queue.call_every(100ms,&_wifi, &WIFI::send_data,&sensor, &socket_connect);
     event_queue.call_every(100ms,&sensor, &Sensor::init_params);
     event_queue.dispatch_forever();
+
+    while(socket_connect);
+    if (!socket_connect) return 0;
 }

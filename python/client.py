@@ -13,22 +13,22 @@ obj_s = json.dumps(json_s)
 print(obj_s)
 print(len(obj_s))
 
-n = 0;
+n = 0
 
 
 while True:
     s.sendall(bytes(obj_s,encoding="utf-8"))
 
-    if (json_s["leftButton"] == 1):
-    	json_s["leftButton"] = 0
-    elif (json_s["leftButton"] == 0):
-    	json_s["leftButton"] = 1
+    # if (json_s["leftButton"] == 1):
+    # 	json_s["leftButton"] = 0
+    # elif (json_s["leftButton"] == 0):
+    # 	json_s["leftButton"] = 1
 
-    if (json_s["topButton"] == 1):
-    	json_s["topButton"] = 0
-    elif (json_s["topButton"] == 0):
-    	json_s["topButton"] = 1
-    obj_s = json.dumps(json_s)
+    # if (json_s["topButton"] == 1):
+    # 	json_s["topButton"] = 0
+    # elif (json_s["topButton"] == 0):
+    # 	json_s["topButton"] = 1
+    # obj_s = json.dumps(json_s)
     time.sleep(2)
     
     # indata = s.recv(1024)

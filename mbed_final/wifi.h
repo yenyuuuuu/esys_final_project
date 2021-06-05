@@ -14,7 +14,7 @@ class WIFI{
         WIFI(NetworkInterface* wifi, events::EventQueue &event_queue);
         ~WIFI();
         void connect(TCPSocket* socket);
-        void send_data(Sensor* sensor);
+        void send_data(Sensor* sensor, bool* socket_connect);
 };
 
 #endif

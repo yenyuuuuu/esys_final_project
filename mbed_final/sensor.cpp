@@ -42,9 +42,9 @@ void Sensor::calibrate(){
 
 void Sensor::getData()
 {
-    leftButton = (BUTTON_LEFT.read())?1:0;
-    rightButton = (BUTTON_RIGHT.read())1:0;
-    topButton = (BUTTON_TOP.read())1:0;
+    leftButton = ((BUTTON_LEFT.read())?1:0);
+    rightButton = (BUTTON_RIGHT.read()?1:0);
+    topButton = (BUTTON_TOP.read()?1:0) ;
     BSP_ACCELERO_AccGetXYZ(_pAccDataXYZ);
     BSP_GYRO_GetXYZ(_pGyroDataXYZ);
 }
