@@ -26,9 +26,9 @@ int main()
 {   
     TCPSocket socket;
     Sensor sensor(event_queue);
-    WIFI   _wifi(&wifi, event_queue, &socket);
+    WIFI   _wifi(&wifi, event_queue);
 
-    _wifi.connect();
+    _wifi.connect(&socket);
     
     printf("------------------------\n");
     printf("Mario Kart game Start ><\n");

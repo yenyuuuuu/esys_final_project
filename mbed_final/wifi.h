@@ -11,11 +11,10 @@ class WIFI{
         TCPSocket* _socket;
 
     public:
-        WIFI(NetworkInterface* wifi, events::EventQueue &event_queue, TCPSocket* socket);
+        WIFI(NetworkInterface* wifi, events::EventQueue &event_queue);
         ~WIFI();
         void connect();
         void send_data(Sensor* sensor);
-
 };
 
 #endif

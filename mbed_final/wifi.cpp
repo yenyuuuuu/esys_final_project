@@ -22,7 +22,7 @@ extern SpwfSAInterface wifi;
 
 
 WIFI::WIFI(NetworkInterface* wifi, events::EventQueue &event_queue, TCPSocket* socket)
-        : _wifi(wifi), _event_queue(event_queue), _socket(socket)
+        : _wifi(wifi), _event_queue(event_queue), _socket(NULL)
 { 
     
 }
@@ -32,7 +32,7 @@ WIFI::~WIFI(){
     _wifi->disconnect();
 }
 
-void WIFI::connect(){
+void WIFI::connect(TCPSocket* socket){
 
     int ret;
     do {
@@ -58,40 +58,35 @@ void WIFI::connect(){
     printf("Sending request to %s...\n", IP_address);
 
     do {
+        _socket = new TCPSocket;
         _socket->open(_wifi);
         _wifi->gethostbyname(IP_address, &addr);
         addr.set_port(Port_number);
         response = _socket->connect(addr);
 
-        if (0 != response){
+        if (NSAPI_ERROR_OK != response){
             printf("Error connecting: %d\n", response);
-            _socket->shutdown();
+            _socket->close();
+            delete _socket;
         }
-    } while (0 != response);
+    } while (NSAPI_ERROR_OK != response);
+    socket = _socket;
     printf("WIFI connect() return\n");
 }
 
 
 void WIFI:: send_data(Sensor* sensor)
 {
-    // printf("send Data\n");
-    char sbuffer[105] = "";
+    char sbuffer[500] = "";
     nsapi_error_t response;
     nsapi_size_t size = strlen(sbuffer);
 
 
-    int len = sprintf(sbuffer,"{\"Left\":%d,\"Right\":%d,\"Jump\":%d,\"Item_front\":%d,\"Item_back\":%d,\"Drift\":%d,\"Acc\":%d}",sensor->left,sensor->right,sensor->jump,sensor->itemFront,sensor->itemBack,sensor->drift,sensor->acc);
-    // printf("{\"Left\":%d,\"Right\":%d,\"Jump\":%d,\"Item_front\":%d,\"Item_back\":%d,\"Drift\":%d,\"Acc\":%d}\n",_left,_right,_jump,_itemFront,_itemBack,_drift,_acc);
-    if (sensor->jump) printf("jump\n");
-    if (sensor->left) printf("left\n");
-    if (sensor->right) printf("right\n");
-    if (sensor->itemFront) printf("throw item front\n");
-    if (sensor->itemBack) printf("throw item back\n");
-    if (sensor->drift) printf("drift\n");
-
+    int len = sprintf(sbuffer,"{\"Acc_x\":%.2f,\"Acc_y\":%.2f,\"Acc_z\":%.2f,\"Gyro_x\":%.2f,\"Gyro_y\":%.2f,\"Gyro_z\":%.2f,\"Item_front\":%d,\"Item_back\":%d,\"Acc\":%d}",sensor->_pAccDataXYZ[0],sensor->_pAccDataXYZ[1],sensor->_pAccDataXYZ[2],sensor->_pGyroDataXYZ[0],sensor->_pGyroDataXYZ[1],sensor->_pGyroDataXYZ[2],sensor->itemFront, sensor->itemBack, sensor->acc);
+    printf("len: %d", len);
 
     response = _socket->send(sbuffer,len);
-    if (0 >= response){
+    if (len != response){
         printf("Error sending: %d\n", response);
     }
 }
