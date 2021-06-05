@@ -65,10 +65,10 @@ void WIFI::connect(){
 
         if (0 != response){
             printf("Error connecting: %d\n", response);
-            _socket->close();
+            _socket->shutdown();
         }
     } while (0 != response);
-
+    printf("WIFI connect() return\n");
 }
 
 

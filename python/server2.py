@@ -8,7 +8,7 @@ HOST = '192.168.10.100'  # Standard loopback interface address (localhost) 192.1
 PORT = 3000        # Port to listen on (non-privileged ports are > 1023)
 
 #_mod_
-keyDict = {"Left": "left", "Right": "right", "Jump":"c", "Item_front":"up", "Item_back":"down", "Drift":"x", "Acc": "c"}
+keyDict = {"Left": "left", "Right": "right", "Jump":"c", "Item_front":"up", "Item_back":"down", "Drift":"c", "Acc": "x"}
 #keyDict = {"Left": "left", "Right": "right", "Jump":"up", "Drift":"space"}
 
 # use ggplot style for more sophisticated visuals

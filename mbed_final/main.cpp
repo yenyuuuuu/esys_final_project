@@ -29,7 +29,7 @@ int main()
     WIFI   _wifi(&wifi, event_queue, &socket);
 
     _wifi.connect();
-
+    
     printf("------------------------\n");
     printf("Mario Kart game Start ><\n");
     printf("------------------------\n");
